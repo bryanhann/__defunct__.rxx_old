@@ -13,12 +13,8 @@ function src      { echo https://github.com/bryanhann/${NAME}; }
 function dst      { echo $(site)/${NAME}; }
 function site     { echo $(python -c "$PY" 2> /tmp/foo); }
 function active   { [ -z "$(site)" ] && return 1 || return 0 ;}
-
-function gosite { 
-    PATH=${RXX}/bin:$PATH
-    pushd $(site); 
-    bash
-}
+function check    { python -m ${NAME} >/tmp/foo 2>/tmp/foo || echo FAIL; }
+function gosite   { PATH=${RXX}/bin:$PATH; pushd $(site); bash; }
 
 [ .$1 == .-v  ] && rm -rf $VENV
 [ .$1 == .-v  ] && shift
@@ -27,7 +23,10 @@ function gosite {
 [ -f ${FLAG}  ] || pip install --upgrade pip
 [ -f ${FLAG}  ] || touch ${FLAG}
 [ ! -d $(dst) ] && active && git clone $(src) $(dst)
-[ .$1 == .    ] && echo Try $0 python -m $NAME
-[ .$1 == .    ] && exit
+[ -z $(check) ] || echo "$0: FAIL: cannot import r20"
+[ -z $(check) ] || exit
 
 $*
+
+
+
