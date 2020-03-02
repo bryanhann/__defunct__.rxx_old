@@ -10,7 +10,7 @@ FLAG=${VENV}/.flag_pip_upgraded
 SRC=https://github.com/bryanhann/r20.git
 
 function src      { echo https://github.com/bryanhann/${NAME}; }
-function dst      { echo $(site)/{NAME}; }
+function dst      { echo $(site)/${NAME}; }
 function site     { echo $(python -c "$PY" 2> /tmp/foo); }
 function active   { [ -z "$(site)" ] && return 1 || return 0 ;}
 
