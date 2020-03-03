@@ -1,14 +1,19 @@
-NAME=r20
-URL=https://github.com/bryanhann/${NAME}.git
-GH=https://github.com/bryanhann
-
 pushd $0/.. > /tmp/foo ; 
     export   RXX=$PWD 
-    export  VENV=$PWD/__VENV__
-    export  WLIB=$PWD/__LIB__
-    SCRIPT="import sys;print([p for p in sys.path if p.startswith('${VENV}')][0])"
-    FLAG=${VENV}/.flag_pip_upgraded
+    export  VENV=$PWD/.__VENV__
+    export  WLIB=$PWD/.__LIB__
 popd > /tmp/foo
+
+export NAME=r20
+export FLAG=${VENV}/.flag_pip_upgraded
+export GHBH=https://github.com/bryanhann
+export PYSCRIPT="import sys;print([p for p in sys.path if p.startswith('${VENV}')][0])"
+
+function __ghbh     { git clone ${GHBH}/$1 ${WLIB}/$1; }
+function __link     { ln -s ${WLIB}/$1 $(__site)/$1 ; }
+function __site     { echo $(python -c "$PYSCRIPT" 2> /tmp/foo); } 
+function __config   { source ${RXX}/config/$1; }
+function __install  { __ghbh $1; __link $1; }
 
 function __usage {
     echo
@@ -24,27 +29,13 @@ function __usage {
     echo
 }
 
-function __clone    { 
-    git clone ${GH}/$1 ${WLIB}/$1 
-}
-function __link     { 
-    ln -s ${WLIB}/$1 $(__site)/$1 ; 
-}
-function __warn     { echo "$0: WARNING: cannot import r20"; }
-function __check    { python -m ${NAME} __exit__ 42 >/tmp/foo 2>/tmp/foo ; echo $?; } 
-function __site     { echo $(python -c "$SCRIPT" 2> /tmp/foo); } 
-function __active   { [ -z "$(__site)" ] && return 1 || return 0 ;}
-
 [ .$1 == .-v   ] && shift && rm -rf ${VENV}                 
 [ .$1 == .-l   ] && shift && rm -rf ${WLIB}                 
-[ ! -d ${VENV} ] &&  python3 -m venv ${VENV}          
-[ true         ] &&  . ${VENV}/bin/activate                   
-[ ! -f ${FLAG} ] &&  touch ${FLAG} && pip install --upgrade pip
-
-[ -d ${WLIB}/${NAME} ]   || __clone ${NAME}
-[ -s $(__site)/${NAME} ] || __link  ${NAME}
-
-[ "$1" == "." ] && [   -z "$2" ] && __usage && exit
-[ "$1" == "." ] && [ ! -z "$2" ] && shift   && ${RXX}/bin/$* && exit
+[ ! -d ${VENV} ] && python3 -m venv ${VENV}          
+[ true         ] && source ${VENV}/bin/activate                   
+[ ! -f ${FLAG} ] && touch ${FLAG} && __config __init__
+[ "$1" == "."  ] && [   -z "$2" ] && __usage && exit
+[ "$1" == "."  ] && [ ! -z "$2" ] && shift   && ${RXX}/bin/$* && exit
+[ "$1" == ""   ] && __usage && exit
 
 $*

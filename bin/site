@@ -1,6 +1,0 @@
-pushd $(${RXX}/with -s)
-bash
-
-#PATH=${RXX}/bin:$PATH; 
-#pushd $(site); bash; }
-
