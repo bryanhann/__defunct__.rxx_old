@@ -1,0 +1,4 @@
+bhpip install --upgrade pip
+bhpip install virtualenv
+__install r20
+__config github3
