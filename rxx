@@ -32,7 +32,7 @@ function __link     { ln -s ${WLIB}/$1 $(__site)/$1 ; }
 function __site     { echo $(python -c "$PYSCRIPT" 2> /tmp/foo); } 
 function __config   { source ${RXX}/config/$1; }
 function __install  { __ghbh $1; __link $1; }
-
+function -q { echo -n ""; }
 function __usage {
     echo
     echo "usage:"
