@@ -14,10 +14,12 @@ if [ "$1" == "2" ]; then
     shift
     export VENV=$VENV2
     export MAKE=$MAKE2
+    export RXX_VVV=2
 elif [ "$1" == "3" ]; then
     shift
     export VENV=$VENV3
     export MAKE=$MAKE3
+    export RXX_VVV=3
 else 
     export VENV=
     export MAKE=
@@ -26,11 +28,17 @@ fi
 export NAME=r20
 export FLAG=${VENV}/.flag_pip_upgraded
 export GHBH=https://github.com/bryanhann
-export PYSCRIPT="import sys;print([p for p in sys.path if p.startswith('${VENV}')][0])"
+export PYSCRIPT2="import sys;print([p for p in sys.path if p.startswith('${VENV2}')][0])"
+export PYSCRIPT3="import sys;print([p for p in sys.path if p.startswith('${VENV3}')][0])"
 
 function __ghbh     { git clone ${GHBH}/$1 ${WLIB}/$1; }
 function __link     { ln -s ${WLIB}/$1 $(__site)/$1 ; }
-function __site     { echo $(python -c "$PYSCRIPT" 2> /tmp/foo); } 
+function __site     { 
+#[ "$RXX_VVV" == "3" ] && source ${VENV3}/bin/activate
+#[ "$RXX_VVV" == "2" ] && source ${VENV2}/bin/activate
+[ "$RXX_VVV" == "2" ] && echo $(python -c "$PYSCRIPT2" 2> /tmp/foo);
+[ "$RXX_VVV" == "3" ] && echo $(python -c "$PYSCRIPT3" 2> /tmp/foo);
+} 
 function __config   { source ${RXX}/config/$1; }
 function __install  { __ghbh $1; __link $1; }
 function -q { echo -n ""; }

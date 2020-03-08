@@ -1,0 +1,4 @@
+if [ -z "${PIP_DOWNLOAD_CACHE}" ];
+    then  pip $* ;
+    else  pip --cache-dir ${PIP_DOWNLOAD_CACHE} $* ;
+fi
