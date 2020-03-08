@@ -2,6 +2,8 @@ pushd $0/.. > /tmp/foo ;
     export   RXX=$PWD 
 popd > /tmp/foo
 
+path_contains () { for component in ${PATH//:/$'\n'}; do [ ${component} == ${1} ] && return 0; done; return 1; }
+path_contains ${RXX} || export PATH=${RXX}:$PATH
 WLIB=${RXX}/.L
 VENV2=${RXX}/.2
 VENV3=${RXX}/.3
@@ -21,7 +23,6 @@ else
     export MAKE=
 fi
 
-magic_rxx 2> /dev/null || export PATH=${RXX}/bin:$PATH
 export NAME=r20
 export FLAG=${VENV}/.flag_pip_upgraded
 export GHBH=https://github.com/bryanhann
