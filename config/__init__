@@ -1,5 +1,0 @@
-rxx . _pip install --upgrade pip
-rxx . _pip install virtualenv
-rxx . _pip install virtualenvwrapper
-rxx __install r20
-rxx __config github3

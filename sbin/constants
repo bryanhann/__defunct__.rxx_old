@@ -1,0 +1,7 @@
+export VL=${RXX}/.L
+export V2=${RXX}/.2
+export V3=${RXX}/.3
+export RXX_QUIET=${RXX}/.f_quiet
+export PATH=$(python ${RXX}/sbin/fixpath.py ${RXX})
+export RXX_BHGH=https://github.com/bryanhann
+
