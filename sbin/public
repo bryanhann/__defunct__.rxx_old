@@ -1,0 +1,38 @@
+#=======================================================================================
+# functions documented in ./sbin/usage
+
+source ${RXX_ROOT}/sbin/private
+
+function .dclone () { 
+    .clone $(.orig)/${*}
+}
+function .dinstall () { 
+    .install $(.orig)/${*} 
+}
+
+function .install () {
+    .clone ${1} ${2}
+    .link  ${2}/${3} ${4}
+}
+
+function .clone () { 
+    if [ -d "$(.repo)/${2}" ]; 
+        then .note_clone ALREADY $(.repo)/${2}
+        else .note_clone CLONING $(.repo)/${2} ; git clone ${1} $(.repo)/${2}
+    fi
+}
+ 
+function .link () { 
+    if [ -s "$(.site)/${2}" ]; 
+        then .note_link ALREADY $(.repo)/${1} 
+        else .note_link LINKING $(.repo)/${1} ; ln -s $(.repo)/${1} $(.site)/${2}
+    fi
+}
+
+function .pip () {
+    .note PIP ${*}
+    if [ -z "${PIP_DOWNLOAD_CACHE}" ]; 
+        then pip ${*}
+        else pip --cache-dir ${PIP_DOWNLOAD_CACHE} ${*} 
+    fi
+}

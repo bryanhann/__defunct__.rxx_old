@@ -1,0 +1,27 @@
+#=======================================================================================
+# functions not documented in ./sbin/usage
+
+function .note        () { [ -z "${RXX_NOTE}" ] || echo  '>>>>>>>>' "${*}" '<<<<<<<<'; }
+function .note_link   () { .note ".link   :" ${*} ; }
+function .note_clone  () { .note ".clone  :" ${*} ; }
+function .note_config () { .note ".config :" ${*} ; }
+function .site        () { echo $(python ${RXX_ROOT}/sbin/rxx_site.py) ; }
+function .repo        () { echo ${RXX_REPO}; }
+function .orig        () { echo ${RXX_ORIG}; }
+
+handle-c () {
+    conf=${RXX_CONF}/${1}.cfg
+    flag=${RXX_VENV}/.flag.${1}.cfg
+    if   [ ! -f ${conf} ]; then .note_config MISSING ${conf}
+    elif [   -f ${flag} ]; then .note_config ALREADY ${conf}
+    elif [ true         ]; then .note_config CONFIG  ${conf} ; ${conf} ; touch ${flag}
+    fi
+}
+
+handle-q () {
+      unset RXX_NOTE
+}
+
+handle-v () {
+    export RXX_NOTE=1
+}

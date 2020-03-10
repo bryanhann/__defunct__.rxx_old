@@ -1,64 +1,35 @@
-export RXX=$(python $(dirname $0)/sbin/getroot.py)
+export RXX_ROOT=$(python $(dirname $0)/sbin/rxx_root.py)
+export RXX_REPO=${RXX_ROOT}/.L
+export RXX_VENV=${RXX_ROOT}/.3
+export RXX_CONF=${RXX_ROOT}/config
+export RXX_ORIG=$(python3 ${RXX_ROOT}/sbin/rxx_orig.py)
+export PATH=$(python3 ${RXX_ROOT}/sbin/rxx_newpath.py ${RXX_ROOT})
 
-source ${RXX}/sbin/constants
-source ${RXX}/sbin/functions
+[   "$1" == ""     ] && ${RXX_ROOT}/sbin/usage.sh && exit
+[   -z ${RXX_ORIG} ] && ${RXX_ROOT}/sbin/usage.sh && exit 1
 
-if [ "$1$2" == "."   ]; then ${RXX}/sbin/usage; exit; fi
-if [ "$1$2" == ""    ]; then ${RXX}/sbin/usage; exit; fi
+[ ! -d ${RXX_VENV} ] && python3 -m venv ${RXX_VENV}
+
+source ${RXX_VENV}/bin/activate
+source ${RXX_ROOT}/sbin/private
+source ${RXX_ROOT}/sbin/public
+
 
 while [ true ]; do
     case $1. in
-        2.)
-            .note using python 2 virtual environment
-            export PYSCRIPT="import sys;print([p for p in sys.path if p.startswith('${V2}')][0])"
-            export VENV=$V2
-            export RXX_VVV=2
-            [ -d ${V2} ] || /usr/bin/python ${RXX}/sbin/virtualenv.pyz ${V2}
-            source ${V2}/bin/activate
-            ;;
-        3.)
-            .note using python 3 virtual environment
-            export PYSCRIPT="import sys;print([p for p in sys.path if p.startswith('${V3}')][0])"
-            export VENV=$V3
-            export RXX_VVV=3
-            [ -d ${V3} ] || python3 -m venv ${V3}
-            source ${V3}/bin/activate
-            ;;
-        -2.)
-            .note removing virtual environment for python 2
-            __rm ${V2}
-            ;;
-        -3.)
-            .note removing virtual enviromnent for python 3
-            __rm ${V3}
-            ;;
-        -r.)
-            .note removing repos
-            __rm $(.repo)
-            ;;
         -q.)
-            unset RXX_NOTE
+            handle-q ;shift
             ;;
         -v.)
-            export RXX_NOTE=1
+            handle-v ;shift
             ;;
         -c.)
-            if [ "$3" == "-r" ];
-                then .config $2 $3; shift; shift
-                else .config $2   ; shift
-            fi
+            handle-c $2 ;shift ;shift
             ;;
         *)
-            if [ -z "${VENV}" ]; then
-                echo warning: no 2 or 3
-            else
-                #source ${VENV}/bin/activate
-                $*
-                #deactivate
-            fi
-            exit
+            break
             ;;
     esac
-shift
 done
+$*
 
