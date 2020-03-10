@@ -1,6 +1,4 @@
-pushd $0/.. > /tmp/foo ; 
-    export  RXX=$PWD 
-popd > /tmp/foo
+export RXX=$(python $(dirname $0)/sbin/getroot.py)
 
 source ${RXX}/sbin/constants
 source ${RXX}/sbin/functions
